@@ -7,26 +7,85 @@
 
 import SwiftUI
 
+
+struct Reset: View {
+    var body: some View{
+    Button(action: {
+        player.count = 20
+    }) { Text("Reset")
+            .padding()
+            .font(.largeTitle)
+            .foregroundColor(Color.primary)
+            .background(Capsule().fill(Color.secondary))
+        }
+    }
+}
+
+
+struct PlayerColor: View{
+    @State private var selectColor: Color
+    private let colors: [Color] = [.red, .white, .green , .blue, .purple , .gray ]
+    var body: some View{
+        
+    }
+}
+
+
+struct PlayerView: View{
+    var body: some View{
+        VStack{
+            Text("\( player.number)")
+            HStack{
+                
+                Button(action:{
+                    print("-")
+                    player.count -= 1
+                } ){
+                    Text("-")
+                        .padding()
+                        .onLongPressGesture {
+                            player.count -= 10
+                        }
+                        .font(.largeTitle)
+                        .foregroundColor(Color.gray)
+                        .background(Circle().fill(Color.black))
+                }
+                
+                Text("\( player.count )life")
+                
+                Button(action:{
+                    print("+")
+                    player.count += 1
+                } ){
+                    Text("+")
+                        .padding()
+                        .onLongPressGesture {
+                            player.count += 10
+                        }
+                        .font(.largeTitle)
+                        .foregroundColor(Color.gray)
+                        .background(Circle().fill(Color.black))
+                }
+            }.background(player.color)
+        }
+        
+    }
+}
+
+
+struct Player {
+    var number: Int
+    var count: Int
+    var color: Color
+}
+
+var player = Player(number: 1, count: 20, color: .gray)
+
+
 struct ContentView: View {
     @State var count: Int = 20
     @State var playerOneCount: Int = 20
     @State var playerTwoCount: Int = 20
-    
-    @GestureState var isDetectingLongPress = false
-    @State var completedLongPress = false
-    
-    var longPress: some Gesture{
-        LongPressGesture(minimumDuration: 1)
-            .updating($isDetectingLongPress){ currentState, GestureState,
-                transaction in
-            GestureState = currentState
-            transaction.animation = Animation.easeIn(duration: 2.0)
-        }
-            .onEnded { finished in
-                self.completedLongPress = finished
-            }
-    }
-    
     var body: some View {
         VStack(alignment: .center){
             HStack{
@@ -35,6 +94,9 @@ struct ContentView: View {
                 } ){
                     Text("-")
                         .padding()
+                        .onLongPressGesture {
+                            playerTwoCount -= 10
+                        }
                         .font(.largeTitle)
                         .foregroundColor(Color.gray)
                         .background(Circle().fill(Color.black))
@@ -48,6 +110,9 @@ struct ContentView: View {
                     Text("+")
                         .padding()
                         .font(.largeTitle)
+                        .onLongPressGesture {
+                            playerTwoCount += 10
+                        }
                         .foregroundColor(Color.gray)
                         .background(Circle().fill(Color.black))
                 }
@@ -93,6 +158,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+        PlayerView()
 .previewInterfaceOrientation(.landscapeLeft)
     }
 }

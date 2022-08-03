@@ -21,15 +21,40 @@ struct Reset: View {
     }
 }
 
-
-struct PlayerColor: View{
-    @State private var selectColor: Color
-    private let colors: [Color] = [.red, .white, .green , .blue, .purple , .gray ]
+struct PlayerNum: View{
+    var num = [ 10 ,20 ,30 ,40 ,50 ,60]
+    @State private var numSelected = 1
     var body: some View{
-        
+        VStack{
+            Picker("Select players", selection: $numSelected){
+                ForEach(num, id: \.self){
+                    Text("\($0)")
+                }
+            }
+        }
+        return 
     }
 }
 
+struct MatchView: View{
+    var body: some View{
+        VStack{
+            HStack{
+                PlayerView
+                PlayerView
+                PlayerView
+            }
+            HStack{
+                Reset()
+            }
+            HStack{
+                PlayerView
+                PlayerView
+                PlayerView
+            }
+        }
+    }
+}
 
 struct PlayerView: View{
     var body: some View{

@@ -21,9 +21,22 @@ struct Reset: View {
     }
 }
 
+
+struct PlayerColor: View{
+    @Binding var plColor: Color
+    
+    var body: some View{
+        VStack{
+            ColorPicker("Set Player Color", selection: $plColor)
+        }
+        .frame(maxWidth: .infinity,maxHeight: .infinity )
+    }
+}
+
 struct PlayerNum: View{
-    var num = [ 10 ,20 ,30 ,40 ,50 ,60]
-    @State private var numSelected = 1
+    
+    let num = [ 10 ,20 ,30 ,40 ,50 ,60]
+    @Binding var numSelected: Int
     var body: some View{
         VStack{
             Picker("Select players", selection: $numSelected){
@@ -32,34 +45,41 @@ struct PlayerNum: View{
                 }
             }
         }
-        return 
     }
 }
 
 struct MatchView: View{
+    
+    @State var count: Int = 20
     var body: some View{
         VStack{
             HStack{
-                PlayerView
-                PlayerView
-                PlayerView
+                PlayerView(plNum: 1)
+                PlayerView(plNum: 2)
+                PlayerView(plNum: 3)
             }
             HStack{
                 Reset()
+                PlayerNum(numSelected: $count)
             }
             HStack{
-                PlayerView
-                PlayerView
-                PlayerView
+                PlayerView(plNum: 4)
+                PlayerView(plNum: 5)
+                PlayerView(plNum: 6)
             }
         }
     }
 }
 
 struct PlayerView: View{
+    let plNum: Int
+    @State var plColor: Color = .green
     var body: some View{
         VStack{
-            Text("\( player.number)")
+            Text("Player \( plNum)").onLongPressGesture{
+                PlayerColor(plColor: $plColor)
+            }
+            
             HStack{
                 
                 Button(action:{
@@ -91,8 +111,8 @@ struct PlayerView: View{
                         .foregroundColor(Color.gray)
                         .background(Circle().fill(Color.black))
                 }
-            }.background(player.color)
-        }
+            }
+        }.background(player.color)
         
     }
 }
@@ -111,9 +131,12 @@ struct ContentView: View {
     @State var count: Int = 20
     @State var playerOneCount: Int = 20
     @State var playerTwoCount: Int = 20
+    @State var plColor: Color = .gray
+    
     var body: some View {
         VStack(alignment: .center){
             HStack{
+                
                 Button(action: {
                     self.playerTwoCount -= 1
                 } ){
@@ -141,7 +164,10 @@ struct ContentView: View {
                         .foregroundColor(Color.gray)
                         .background(Circle().fill(Color.black))
                 }
-            }
+            }.background(plColor)
+                .onLongPressGesture{
+                    PlayerColor(plColor: $plColor)
+            PlayerNum(numSelected: $count)
             Button(action: {
                 self.playerOneCount = count
                 self.playerTwoCount = count
@@ -175,7 +201,7 @@ struct ContentView: View {
                             .foregroundColor(Color.gray)
                             .background(Circle().fill(Color.black))
                     }
-                }
+                }.background(plColor)
             }
         }
 }
@@ -183,7 +209,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-        PlayerView()
+        MatchView()
 .previewInterfaceOrientation(.landscapeLeft)
     }
 }

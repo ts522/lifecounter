@@ -12,6 +12,7 @@ struct LifeTotalApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+            //MatchView()
         }
     }
 }
